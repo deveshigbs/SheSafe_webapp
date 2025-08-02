@@ -4,10 +4,18 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import "../App.css";
 import loginBg from "../assets/login.JPG";
 
+import { useTranslation } from "react-i18next";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,8 +30,38 @@ function Login() {
 
   return (
     <div className="auth-container" style={{ backgroundImage: `url(${loginBg})` }}>
+
       <form className="auth-box" onSubmit={handleLogin}>
-        <h2>Welcome Back 👋</h2>
+
+        {/* Language Selector */}
+        <div style={{ textAlign: "right", margin: "10px" }}>
+          <select
+            onChange={(e) => changeLanguage(e.target.value)}
+            defaultValue={i18n.language}
+            style={{
+              padding: "6px 12px",
+              borderRadius: "6px",
+              fontSize: "14px",
+              background: "#f3f3f3",
+            }}
+          >
+            <option value="en">🌐 English</option>
+            <option value="hi">🇮🇳 हिंदी</option>
+            <option value="bn">🇧🇩 বাংলা</option>
+            <option value="mr">🇮🇳 मराठी</option>
+            <option value="as">🇮🇳 Assamese</option>
+            <option value="ks">🇮🇳 Kashmiri</option>
+            <option value="kn">🇮🇳 Kannada</option>
+            <option value="pa">🇮🇳 Punjabi</option>
+            <option value="hr">🇮🇳 Haryanvi</option>
+            <option value="or">🇮🇳 Odia</option>
+            <option value="mni">🇮🇳 Manipuri</option>
+            <option value="ta">🇮🇳 Tamil</option>
+            <option value="ml">🇮🇳 Malayalam</option>
+          </select>
+        </div>
+
+        <h2>{t("welcome_back")} 👋</h2>
         <input
           className="input"
           type="email"
@@ -41,7 +79,7 @@ function Login() {
           required
         />
         <button className="btn full-width">Login</button>
-        <p className="auth-switch">Don't have an account? <Link to="/signup">Sign Up</Link></p>
+        <p className="auth-switch">{t("dnt_acc")} <Link to="/signup">Sign Up</Link></p>
       </form>
     </div>
   );

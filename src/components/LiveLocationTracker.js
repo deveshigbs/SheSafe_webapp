@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import L from "leaflet";
+import { useTranslation } from "react-i18next";
 import "leaflet/dist/leaflet.css";
 import "../App.css";
 
@@ -47,6 +48,7 @@ function LocationMarker({ setAddress }) {
 function MapLocation() {
   const [center, setCenter] = useState([28.6139, 77.209]);
   const [address, setAddress] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -61,7 +63,7 @@ function MapLocation() {
 
   return (
     <div className="card">
-      <h3>📍 Select or Tap Location on Map</h3>
+      <h3>{t("select_tap")}</h3>
       <div style={{ height: "300px", borderRadius: "10px", overflow: "hidden" }}>
         <MapContainer center={center} zoom={15} style={{ height: "100%", width: "100%" }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -72,7 +74,7 @@ function MapLocation() {
         id="areaNameInput"
         className="input"
         type="text"
-        placeholder="Selected area name will appear here"
+        placeholder={t("area_placeholder")}
         style={{ marginTop: "1rem" }}
         value={address}
         readOnly

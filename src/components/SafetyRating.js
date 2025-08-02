@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useTranslation } from "react-i18next";
 
 function SafetyRating() {
+  const { t } = useTranslation();
   const [location, setLocation] = useState("");
   const [rating, setRating] = useState(1);
   const [ratings, setRatings] = useState([]);
@@ -62,13 +64,13 @@ function SafetyRating() {
     <div className="card">
       <input
         className="input"
-        placeholder="Enter Area Name"
+        placeholder={t("enter_area")}
         value={location}
         onChange={(e) => setLocation(e.target.value)}
+        id="safetyAreaInput"
       />
       <input
         className="input"
-         id="safetyAreaInput"
         type="number"
         min="1"
         max="5"
@@ -76,10 +78,10 @@ function SafetyRating() {
         onChange={(e) => setRating(Number(e.target.value))}
       />
       <button className="btn" onClick={handleSubmit}>
-        Submit Rating
+        {t("submit_rating")}
       </button>
 
-      <h3 style={{ marginTop: "2rem" }}>📊 Area-Wise Average Rating</h3>
+      <h3 style={{ marginTop: "2rem" }}>{t("avg_rating")}</h3>
       <ResponsiveContainer width="100%" height={250}>
         <BarChart data={groupedRatings}>
           <XAxis dataKey="location" />

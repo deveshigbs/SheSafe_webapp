@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 
+import { useTranslation } from "react-i18next";
+
 function Confessions() {
   const [text, setText] = useState("");
   const [confessions, setConfessions] = useState([]);
@@ -19,6 +21,12 @@ function Confessions() {
     } catch (error) {
       console.error("Error posting confession:", error);
     }
+  };
+
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
   };
 
   const fetchConfessions = async () => {
@@ -39,19 +47,19 @@ function Confessions() {
     <div className="card">
       <input
         className="input"
-        placeholder="Filter by area (e.g., Delhi)"
+        placeholder={t("fltr_area")}
         value={filter}
         onChange={(e) => setFilter(e.target.value)}
       />
       <textarea
         className="input"
         rows="4"
-        placeholder="Share your experience..."
+        placeholder={t("shr_exp")}
         value={text}
         onChange={(e) => setText(e.target.value)}
       ></textarea>
       <button className="btn" onClick={submit}>
-        Post Confession
+        {t("post_confess")}
       </button>
       <div className="grid">
         {filtered.map((c, i) => (

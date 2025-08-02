@@ -1,115 +1,174 @@
-import React, { useState, useEffect } from "react";
-import "../App.css";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-function ContactDesk() {
+const ContactDesk = () => {
+  const { t } = useTranslation();
+
   const [view, setView] = useState("options");
   const [messages, setMessages] = useState([
-    { from: "officer", text: "Hello! How can I help you today?" },
+    { sender: "officer", text: t("officer_hello") },
   ]);
   const [input, setInput] = useState("");
-  const [callTime, setCallTime] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
-  const [audioObj] = useState(() =>
-  new Audio("https://actions.google.com/sounds/v1/alarms/phone_alerts_and_rings.ogg")
-);
 
+  const handleSimulateCall = () => {
+    window.location.href = "tel:1091";
+  };
+
+  const handleChatClick = () => {
+    setView("chat");
+  };
+
+  const handleBack = () => {
+    setView("options");
+    setInput("");
+    setMessages([
+      { sender: "officer", text: t("officer_hello") },
+    ]);
+  };
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages([...messages, { from: "user", text: input }]);
+
+    const updatedMessages = [...messages, { sender: "user", text: input }];
+    updatedMessages.push({
+      sender: "officer",
+      text: t("officer_reply"),
+    });
+
+    setMessages(updatedMessages);
     setInput("");
-
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { from: "officer", text: "Thanks for sharing. We’ll get back shortly." },
-      ]);
-    }, 1000);
-  };
-
-  const handleSimulateCall = () => {
-    if (audioObj) {
-      audioObj.loop = true;
-      audioObj.play().catch((err) => console.warn("Play blocked:", err));
-    }
-
-    const id = setInterval(() => {
-      setCallTime((prev) => prev + 1);
-    }, 1000);
-    setIntervalId(id);
-
-    setCallTime(0);
-    setView("call");
-  };
-
-  const handleEndCall = () => {
-    if (audioObj && !audioObj.paused) {
-      audioObj.pause();
-      audioObj.currentTime = 0;
-    }
-    clearInterval(intervalId);
-    setCallTime(0);
-    setView("options");
-  };
-
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60).toString().padStart(2, "0");
-    const secs = (seconds % 60).toString().padStart(2, "0");
-    return `${mins}:${secs}`;
   };
 
   return (
-    <div className="card">
-      <h3>👮‍♀️ Female Officer Support Desk</h3>
-
+    <div style={{
+      fontFamily: "Arial, sans-serif",
+      padding: "20px",
+      margin: "auto",
+      border: "1px solid #ccc",
+      borderRadius: "10px",
+      backgroundColor: "#f9f9f9"
+    }}>
       {view === "options" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          <button className="btn" onClick={() => setView("chat")}>💬 Chat with Officer</button>
-          <button className="btn" onClick={handleSimulateCall}>📞 Simulate Call</button>
+        <div>
+          <p style={{ marginBottom: "20px" }}>
+            {t("choose_connect")}
+          </p>
+          <button
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "10px",
+              marginBottom: "10px",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer"
+            }}
+            onClick={handleSimulateCall}
+          >
+            {t("simulate_call")}
+          </button>
+          <button
+            style={{
+              display: "block",
+              width: "100%",
+              padding: "10px",
+              backgroundColor: "#2196F3",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer"
+            }}
+            onClick={handleChatClick}
+          >
+            {t("chat")}
+          </button>
         </div>
       )}
 
       {view === "chat" && (
-        <div className="chat-box">
-          <div className="chat-messages">
-            {messages.map((msg, index) => (
+        <div>
+          <div style={{
+            height: "250px",
+            overflowY: "auto",
+            marginBottom: "10px",
+            padding: "10px",
+            backgroundColor: "white",
+            border: "1px solid #ddd",
+            borderRadius: "5px"
+          }}>
+            {messages.map((msg, idx) => (
               <div
-                key={index}
-                className={`chat-message ${msg.from === "user" ? "user-msg" : "officer-msg"}`}
+                key={idx}
+                style={{
+                  textAlign: msg.sender === "user" ? "right" : "left",
+                  marginBottom: "8px"
+                }}
               >
-                {msg.text}
+                <span
+                  style={{
+                    display: "inline-block",
+                    padding: "8px 12px",
+                    borderRadius: "20px",
+                    backgroundColor: msg.sender === "user" ? "#DCF8C6" : "#E6E6E6",
+                    maxWidth: "80%",
+                    wordWrap: "break-word"
+                  }}
+                >
+                  {msg.text}
+                </span>
               </div>
             ))}
           </div>
-          <div className="chat-input">
+
+          <div style={{ display: "flex", gap: "5px" }}>
             <input
-              className="input"
               type="text"
+              placeholder={t("chat_placeholder")}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
+              style={{
+                flex: 1,
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc"
+              }}
             />
-            <button className="btn" onClick={handleSend}>Send</button>
+            <button
+              onClick={handleSend}
+              style={{
+                padding: "10px 15px",
+                backgroundColor: "#4CAF50",
+                color: "white",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer"
+              }}
+            >
+              {t("send")}
+            </button>
           </div>
-          <button className="btn-secondary" onClick={() => setView("options")}>🔙 Back</button>
-        </div>
-      )}
 
-      {view === "call" && (
-        <div className="call-box">
-          <p>📞 Calling Female Officer...</p>
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/4825/4825066.png"
-            alt="female officer"
-            style={{ width: "100px", margin: "1rem auto" }}
-          />
-          <p>Connected. Please speak. (Simulated)</p>
-          <p>🕒 Call Duration: {formatTime(callTime)}</p>
-          <button className="btn-secondary" onClick={handleEndCall}>🔚 End Call</button>
+          <button
+            onClick={handleBack}
+            style={{
+              marginTop: "10px",
+              backgroundColor: "#f44336",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              padding: "8px 12px",
+              cursor: "pointer",
+              width: "100%"
+            }}
+          >
+            {t("back")}
+          </button>
         </div>
       )}
     </div>
   );
-}
+};
 
 export default ContactDesk;

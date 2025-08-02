@@ -11,6 +11,8 @@ import {
 } from "firebase/firestore";
 import "../App.css";
 
+import { useTranslation } from "react-i18next";
+
 function ComplaintForm() {
   const [area, setArea] = useState("");
   const [complaint, setComplaint] = useState("");
@@ -35,10 +37,16 @@ function ComplaintForm() {
     setSubmittedComplaints(results);
   };
 
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!area || !complaint) {
-      alert("Please fill all fields.");
+      alert(t("all_flds"));
       return;
     }
 
@@ -49,13 +57,13 @@ function ComplaintForm() {
         complaint,
         timestamp: new Date(),
       });
-      setMessage("✅ Complaint submitted successfully!");
+      setMessage(t("cmpln_sccss"));
       setArea("");
       setComplaint("");
       fetchComplaints(); // refresh list
       setTimeout(() => setMessage(""), 3000);
     } catch (err) {
-      setMessage("❌ Failed to submit complaint: " + err.message);
+      setMessage(t("cmpn_fl") + err.message);
     }
   };
 
@@ -65,12 +73,12 @@ function ComplaintForm() {
 
   return (
     <div className="card">
-      <h3>🧾 File a Complaint</h3>
+      <h3>🧾 {t("complaints")}</h3>
       <form onSubmit={handleSubmit}>
         <input
           className="input"
           type="text"
-          placeholder="Area Name"
+          placeholder={t("area_placeholder")}
           value={area}
           onChange={(e) => setArea(e.target.value)}
           id="complaintAreaInput"
@@ -78,17 +86,17 @@ function ComplaintForm() {
         <textarea
           className="input"
           rows="4"
-          placeholder="Describe the incident or concern..."
+          placeholder={t("incdn_cncrn")}
           value={complaint}
           onChange={(e) => setComplaint(e.target.value)}
         ></textarea>
-        <button className="btn">Submit Complaint</button>
+        <button className="btn">{t("submit_complain")}</button>
         {message && <p className="success">{message}</p>}
       </form>
 
       {submittedComplaints.length > 0 && (
         <div style={{ marginTop: "2rem" }}>
-          <h4>📂 Your Submitted Complaints</h4>
+          <h4>📂 {t("your_complain")}</h4>
           <ul className="complaint-list">
             {submittedComplaints.map((comp) => (
               <li key={comp.id} style={{ marginBottom: "1rem" }}>

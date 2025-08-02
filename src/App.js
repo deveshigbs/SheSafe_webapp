@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { AuthProvider, useAuth } from "./firebase/AuthContext";
 import "./App.css";
+import './i18n';
 
 function ProtectedRoute({ children }) {
   const { currentUser } = useAuth();
