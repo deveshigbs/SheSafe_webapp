@@ -58,6 +58,7 @@ function Login() {
             <option value="mni">🇮🇳 Manipuri</option>
             <option value="ta">🇮🇳 Tamil</option>
             <option value="ml">🇮🇳 Malayalam</option>
+            <option value="gu">🇮🇳 Gujrati</option>
           </select>
         </div>
 
