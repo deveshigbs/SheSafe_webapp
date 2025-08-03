@@ -46,7 +46,7 @@ function Signup() {
           >
             <option value="en">🌐 English</option>
             <option value="hi">🇮🇳 हिंदी</option>
-            <option value="bn">🇧🇩 বাংলা</option>
+            <option value="bn">🇮🇳 বাংলা</option>
             <option value="mr">🇮🇳 मराठी</option>
             <option value="as">🇮🇳 Assamese</option>
             <option value="ks">🇮🇳 Kashmiri</option>
